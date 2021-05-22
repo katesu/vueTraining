@@ -1,12 +1,10 @@
-const addProduct = document.getElementById('addProduct');
-const cleanAll = document.getElementById('cleanAll');
-const productList = document.getElementById('productList');
-
+// data
 let productsData = [];
 
+// method
 function render() {
   let htmlStr = '';
-  productsData.forEach((product, index) => {
+  productsData.forEach((product) => {
     htmlStr += `
     <tr>
     <td>${product.title}</td>
@@ -33,5 +31,62 @@ function render() {
     </td>
   </tr>`;
   });
-  productList.innerHTML(htmlStr);
+  productList.innerHTML = htmlStr;
+  productCount.textContent = productsData.length;
 }
+
+function addProduct(e) {
+  const timeStamp = String(Date.now()); // typeof Date.now() is number
+  if (title.value.trim() !== '') {
+    productsData.push({
+      id: timeStamp,
+      title: title.value.trim(),
+      origin_price: origin_price.value || 0,
+      price: price.value || 0,
+      is_enabled: false,
+    });
+    render();
+    title.value = '';
+    origin_price.value = '';
+    price.value = '';
+  } else {
+    alert('請輸入產品標題');
+  }
+}
+
+function clearAll(e) {
+  productsData = [];
+  render();
+}
+
+function action(e) {
+  const action = e.target.dataset.action;
+  const id = e.target.dataset.id; // string
+  if (action === 'status') {
+    productsData.forEach((product) => {
+      if (id === product.id) {
+        product.is_enabled = !product.is_enabled;
+      }
+    });
+  } else if (action === 'remove') {
+    productsData.forEach((product, index) => {
+      id === product.id && productsData.splice(index, 1);
+    });
+  }
+  render();
+}
+
+// mounted
+window.onload = function () {
+  const addProductBtn = document.getElementById('addProduct');
+  const clearAllBtn = document.getElementById('clearAll');
+  const productList = document.getElementById('productList');
+  const productCount = document.getElementById('productCount');
+  const title = document.getElementById('title');
+  const origin_price = document.getElementById('origin_price');
+  const price = document.getElementById('price');
+  productsData && render();
+  addProductBtn.addEventListener('click', addProduct);
+  clearAllBtn.addEventListener('click', clearAll);
+  productList.addEventListener('click', action);
+};
