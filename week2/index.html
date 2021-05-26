@@ -72,13 +72,11 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      const apiUrl = 'https://vue3-course-api.hexschool.io/';
-
       function login(e) {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         const loginData = { username, password };
-
+        
         axios.post(`${apiUrl}admin/signin`, loginData).then((res) => {
           if (res.data.success) {
             const { token, expired } = res.data;
@@ -92,13 +90,13 @@
           document.getElementById('login').click();
         }
       }
-      window.onload = function () {
-        const form = document.getElementById('form');
-        const loginBtn = document.getElementById('login');
+      
+      const apiUrl = 'https://vue3-course-api.hexschool.io/';
+      const form = document.getElementById('form');
+      const loginBtn = document.getElementById('login');
 
-        loginBtn.addEventListener('click', login);
-        form.addEventListener('keydown', keydownEnter);
-      };
+      loginBtn.addEventListener('click', login);
+      form.addEventListener('keydown', keydownEnter);
     </script>
   </body>
 </html>
