@@ -23,23 +23,38 @@ const app = {
   getProducts() {
     const { apiUrl, apiPath } = this.data;
 
-    axios.get(`${apiUrl}api/${apiPath}/admin/products`).then((res) => {
-      this.data.products = res.data.products;
-      this.render();
-    });
+    axios.get(`${apiUrl}api/${apiPath}/admin/products`)
+      .then((res) => {
+        const { success } = res.data;
+        if (success) {
+          this.data.products = res.data.products;
+          this.render();
+        }
+      })
+      .catch((err) => {
+        console.log('getProducts error: ', err)
+      });
   },
   deleteProduct(e) {
     const { apiUrl, apiPath } = app.data;
+
+    const isButton = e.target.type;
     const id = e.target.dataset.id;
 
-    axios.delete(`${apiUrl}api/${apiPath}/admin/product/${id}`).then((res) => {
-      const { success, message } = res.data;
-      if (success) {
-        app.getProducts();
-      } else {
-        alert(`${message}`);
-      }
-    });
+    if (isButton) {
+      axios.delete(`${apiUrl}api/${apiPath}/admin/product/${id}`)
+        .then((res) => {
+          const { success, message } = res.data;
+          if (success) {
+            app.getProducts();
+          } else {
+            alert(`${message}`);
+          }
+        })
+        .catch((err) => {
+          console.log('deleteProduct error: ', err)
+        });
+    }
   },
   render() {
     const productList = document.getElementById('productList');
